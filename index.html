@@ -139,7 +139,7 @@ button{font:inherit}
  <section class="desktop-icons" aria-label="Dossiers du bureau">
   <button class="folder" data-folder="identite"><i class="folder-icon" style="--folder:#eea9bd"></i><span>Identités visuelles</span></button>
   <button class="folder" data-folder="campagnes"><i class="folder-icon" style="--folder:#f4ce69"></i><span>Mes plus gros projets</span></button>
-  <button class="folder" data-folder="radio"><i class="folder-icon" style="--folder:#9ecce0"></i><span>Radio &amp; spots</span></button>
+  <button class="folder" data-folder="radio"><i class="folder-icon" style="--folder:#9ecce0"></i><span>Mes formations</span></button>
   <button class="folder" data-folder="portfolio"><i class="folder-icon" style="--folder:#f0b47c"></i><span>À propos</span></button>
  </section>
  
@@ -196,8 +196,11 @@ const projects={
   {name:"Pathé",desc:"Dossier de projet",color:"#e9e5df",mark:"P",type:"folder",children:[]},
   {name:"NRJ",desc:"Dossier de projet",color:"#172b4b",mark:"NRJ",type:"folder",children:[]}
  ]},
- radio:{title:"Radio & spots",files:[
-  {name:"NRJ",desc:"Dossier de projet",color:"#172b4b",mark:"NRJ",type:"folder",children:[]}
+ radio:{title:"Mes formations",files:[
+  {name:"Google Digital active",desc:"Dossier",color:"#9ecce0",mark:"G",type:"folder",children:[],inert:true},
+  {name:"L’école de la Voix",desc:"Dossier",color:"#9ecce0",mark:"V",type:"folder",children:[],inert:true},
+  {name:"TOSA Graphics (Graphiste)",desc:"Dossier",color:"#9ecce0",mark:"T",type:"folder",children:[],inert:true},
+  {name:"Tuto.com Parcours Graphiste",desc:"Dossier",color:"#9ecce0",mark:"T",type:"folder",children:[],inert:true}
  ]},
  portfolio:{title:"À propos",files:[
   {name:"À propos",desc:"Parcours & démarche",color:"#b7c7ed",mark:"VG",type:"info",info:"about"},
@@ -233,6 +236,7 @@ function renderFolder(title,items,crumb,origin){
   b.innerHTML=`<div class="thumb" style="background:#f1eee8">${thumb}</div><span class="file-name"></span><span class="file-type"></span>`;
   b.querySelector('.file-name').textContent=item.name;b.querySelector('.file-type').textContent=item.desc||'';
   b.addEventListener('click',()=>{
+   if(item.inert)return;
    if(isFolder){
     renderFolder(item.name,item.children||[],crumb+'  ›  '+item.name,b);
    }else if(hasImage){
