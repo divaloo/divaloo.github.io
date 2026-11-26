@@ -134,6 +134,13 @@ button{font:inherit}
 .welcome-overlay.is-closing{animation:welcomeFadeOut .28s ease forwards}.welcome-overlay.is-closing .welcome-card{animation:welcomeOut .28s ease forwards}
 @keyframes welcomeFade{from{opacity:0}to{opacity:1}}@keyframes welcomeIn{from{opacity:0;transform:translateY(15px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes welcomeFadeOut{to{opacity:0;visibility:hidden}}@keyframes welcomeOut{to{opacity:0;transform:translateY(8px) scale(.98)}}
 @media(max-width:520px){.welcome-card{padding:28px 23px 23px;border-radius:15px}.welcome-card h2{font-size:22px}.welcome-card p{font-size:13px}}
+
+.image-viewer{position:relative;gap:14px}
+.image-nav{display:none;flex:0 0 42px;width:42px;height:42px;border:1px solid rgba(32,36,55,.14);border-radius:50%;background:rgba(255,255,255,.9);color:#252b40;font-size:29px;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.12);transition:background .18s,transform .18s;z-index:2}
+.image-nav:hover{background:#fff;transform:scale(1.07)}
+.image-window.gallery-mode .image-nav{display:flex;align-items:center;justify-content:center}
+.image-window.gallery-mode .image-viewer img{max-width:calc(100% - 112px)}
+@media(max-width:520px){.image-nav{flex-basis:34px;width:34px;height:34px;font-size:24px}.image-window.gallery-mode .image-viewer img{max-width:calc(100% - 82px)}}
 </style>
 </head>
 <body>
@@ -164,7 +171,7 @@ button{font:inherit}
  </section>
 
  <section class="desktop-icons" aria-label="Dossiers du bureau">
-  <button class="folder" data-folder="identite"><i class="folder-icon" style="--folder:#eea9bd"></i><span>Identités visuelles</span></button>
+  <button class="folder" data-folder="identite"><i class="folder-icon" style="--folder:#eea9bd"></i><span>Mes projets et réalisations</span></button>
   <button class="folder" data-folder="campagnes"><i class="folder-icon" style="--folder:#f4ce69"></i><span>Mes plus gros projets</span></button>
   <button class="folder" data-folder="radio"><i class="folder-icon" style="--folder:#9ecce0"></i><span>Mes formations</span></button>
   <button class="folder" data-folder="portfolio"><i class="folder-icon" style="--folder:#f0b47c"></i><span>À propos</span></button>
@@ -209,16 +216,17 @@ button{font:inherit}
    <div class="traffic"><button class="close" aria-label="Fermer"></button><button class="min" aria-label="Réduire"></button><button class="max" aria-label="Agrandir"></button></div>
    <span class="window-title" id="image-window-title">Aperçu</span><span class="window-tools">▧</span>
   </header>
-  <div class="image-viewer"><img id="project-image" alt=""></div>
+  <div class="image-viewer"><button class="image-nav image-prev" id="image-prev" type="button" aria-label="Image précédente">‹</button><img id="project-image" alt=""><button class="image-nav image-next" id="image-next" type="button" aria-label="Image suivante">›</button></div>
  </section>
  <div class="toast" id="toast" role="status"></div>
 </main>
 <script>
 document.getElementById('welcome-close').addEventListener('click',()=>{const welcome=document.getElementById('welcome-overlay');welcome.classList.add('is-closing');welcome.addEventListener('animationend',()=>welcome.remove(),{once:true});});
 const projects={
- identite:{title:"Identités visuelles",files:[
+ identite:{title:"Mes projets et réalisations",files:[
   {name:"REBOOT FESTIVAL",desc:"Charte graphique",color:"#0b0e37",mark:"R",image:"Chava.png",type:"image"},
-  {name:"AVALANCHE E-SPORT",desc:"Charte graphique",color:"#132744",mark:"AV",image:"chava2.png",type:"image"}
+  {name:"AVALANCHE E-SPORT",desc:"Charte graphique",color:"#132744",mark:"AV",image:"chava2.png",type:"image"},
+  {name:"Mascotte AVA",desc:"3 illustrations",color:"#f1eee8",mark:"AVA",type:"folder",gallery:["AVA reboot.png","AVA.png","AVAss.png"]}
  ]},
  campagnes:{title:"Mes plus gros projets",files:[
   {name:"Pathé",desc:"Dossier de projet",color:"#e9e5df",mark:"P",type:"folder",children:[]},
@@ -266,7 +274,9 @@ function renderFolder(title,items,crumb,origin){
   b.querySelector('.file-name').textContent=item.name;b.querySelector('.file-type').textContent=item.desc||'';
   b.addEventListener('click',()=>{
    if(item.inert)return;
-   if(isFolder){
+   if(item.gallery){
+    openGallery(item.name,item.gallery,b);
+   }else if(isFolder){
     renderFolder(item.name,item.children||[],crumb+'  ›  '+item.name,b);
    }else if(hasImage){
     openImage(item.name,item.image,b);
@@ -279,12 +289,28 @@ function renderFolder(title,items,crumb,origin){
  setWindowOrigin(finder,origin);
  finder.classList.remove('closing');finder.classList.add('open');
 }
+let activeGallery=null,galleryIndex=0;
+function showGalleryImage(){
+ const img=document.getElementById('project-image');
+ img.src=activeGallery[galleryIndex];img.alt='Mascotte AVA — '+(galleryIndex+1)+' sur '+activeGallery.length;
+ document.getElementById('image-window-title').textContent='Mascotte AVA · '+(galleryIndex+1)+' / '+activeGallery.length;
+}
+function openGallery(name,images,origin){
+ activeGallery=images;galleryIndex=0;
+ imageWindow.classList.add('gallery-mode');
+ showGalleryImage();
+ setWindowOrigin(imageWindow,origin);
+ imageWindow.classList.remove('closing','expanded');imageWindow.classList.add('open');
+}
 function openImage(name,src,origin){
+ activeGallery=null;imageWindow.classList.remove('gallery-mode');
  document.getElementById('image-window-title').textContent=name;
  const img=document.getElementById('project-image');img.src=src;img.alt=name;
  setWindowOrigin(imageWindow,origin);
  imageWindow.classList.remove('closing','expanded');imageWindow.classList.add('open');
 }
+document.getElementById('image-prev').addEventListener('click',()=>{if(!activeGallery)return;galleryIndex=(galleryIndex-1+activeGallery.length)%activeGallery.length;showGalleryImage();});
+document.getElementById('image-next').addEventListener('click',()=>{if(!activeGallery)return;galleryIndex=(galleryIndex+1)%activeGallery.length;showGalleryImage();});
 function closeImage(){
  imageWindow.classList.add('closing');imageWindow.classList.remove('open');
  setTimeout(()=>imageWindow.classList.remove('closing'),400);
