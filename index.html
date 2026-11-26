@@ -236,7 +236,7 @@ function renderFolder(title,items,crumb,origin){
    }else if(hasImage){
     openImage(item.name,item.image,b);
    }else if(item.type==='info'){
-    openInfo(item.info,b);
+    if(item.info==='cv') openCV(); else openInfo(item.info,b);
    }
   });
   filesEl.appendChild(b);
@@ -281,7 +281,8 @@ function openInfo(which,origin){
  filesEl.appendChild(panel);openWindowShell(origin);
 }
 function openWindowShell(origin){const rect=origin?.getBoundingClientRect();if(rect){finder.style.setProperty('--origin-x',((rect.left+rect.width/2)/innerWidth*100)+'%');finder.style.setProperty('--origin-y',((rect.top+rect.height/2)/innerHeight*100)+'%');}finder.classList.remove('closing');finder.classList.add('open');}
-document.querySelectorAll('[data-action="cv"]').forEach(b=>b.addEventListener('click',()=>showToast('Ajoute ton CV PDF dans le dossier du site pour activer ce raccourci.')));
+document.querySelectorAll('[data-action="cv"]').forEach(b=>b.addEventListener('click',openCV));
+function openCV(){window.open('https://divaloo.github.io/CV-%20Valentin%20gollion.pdf.pdf','_blank','noopener,noreferrer');}
 function showToast(message){toast.textContent=message;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),2500)}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(imageWindow.classList.contains('open'))closeImage();else closeWindow();}});
 document.addEventListener('click',e=>{if(e.target===document.getElementById('desktop')&&finder.classList.contains('open'))closeWindow()});
