@@ -116,6 +116,8 @@ button{font:inherit}
 
 .file.folder-file .thumb{display:grid;place-items:center;overflow:hidden}
 .file.folder-file .folder-logo{display:block;width:62%;height:62%;object-fit:contain;background:transparent}
+.training-file .thumb{border-radius:12px;padding:10px}
+.training-file .folder-logo{width:76%;height:76%;object-fit:contain;background:transparent}
 </style>
 </head>
 <body>
@@ -197,10 +199,10 @@ const projects={
   {name:"NRJ",desc:"Dossier de projet",color:"#172b4b",mark:"NRJ",type:"folder",children:[]}
  ]},
  radio:{title:"Mes formations",files:[
-  {name:"Google Digital active",desc:"Dossier",color:"#9ecce0",mark:"G",type:"folder",children:[],inert:true},
-  {name:"L’école de la Voix",desc:"Dossier",color:"#9ecce0",mark:"V",type:"folder",children:[],inert:true},
-  {name:"TOSA Graphics (Graphiste)",desc:"Dossier",color:"#9ecce0",mark:"T",type:"folder",children:[],inert:true},
-  {name:"Tuto.com Parcours Graphiste",desc:"Dossier",color:"#9ecce0",mark:"T",type:"folder",children:[],inert:true}
+  {name:"Google Digital active",desc:"Dossier",type:"folder",logo:"GOOGLEDIGITALACTIVE.avif",border:"#4285f4",children:[],inert:true},
+  {name:"L’école de la Voix",desc:"Dossier",type:"folder",logo:"ECOLEDELAVOIX.avif",border:"#8b5cf6",children:[],inert:true},
+  {name:"TOSA Graphics (Graphiste)",desc:"Dossier",type:"folder",logo:"TOSA.avif",border:"#16a6a1",children:[],inert:true},
+  {name:"Tuto.com Graphiste",desc:"Dossier",type:"folder",logo:"TUTO.avif",border:"#f28c28",children:[],inert:true}
  ]},
  portfolio:{title:"À propos",files:[
   {name:"À propos",desc:"Parcours & démarche",color:"#b7c7ed",mark:"VG",type:"info",info:"about"},
@@ -230,10 +232,11 @@ function renderFolder(title,items,crumb,origin){
   const hasChildren=Array.isArray(item.children)&&item.children.length>0;
   const isFolder=item.type==='folder'||hasChildren;
   const folderColor=item.color||'#172b4b';
-  const folderLogo='Fichier 1.png';
-  const b=document.createElement('button');b.className='file folder-file';
+  const folderLogo=item.logo||'Fichier 1.png';
+  const b=document.createElement('button');b.className='file folder-file'+(item.logo?' training-file':'');
   const thumb=`<img class="folder-logo" src="${folderLogo}" alt="" aria-hidden="true">`;
-  b.innerHTML=`<div class="thumb" style="background:#f1eee8">${thumb}</div><span class="file-name"></span><span class="file-type"></span>`;
+  const thumbStyle=item.logo?`background:#fff;border:2px solid ${item.border||'#d7dbe5'};box-shadow:none`:'background:#f1eee8';
+  b.innerHTML=`<div class="thumb" style="${thumbStyle}">${thumb}</div><span class="file-name"></span><span class="file-type"></span>`;
   b.querySelector('.file-name').textContent=item.name;b.querySelector('.file-type').textContent=item.desc||'';
   b.addEventListener('click',()=>{
    if(item.inert)return;
