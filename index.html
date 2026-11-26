@@ -226,7 +226,8 @@ const projects={
  identite:{title:"Mes projets et réalisations",files:[
   {name:"REBOOT FESTIVAL",desc:"Charte graphique",color:"#0b0e37",mark:"R",image:"Chava.png",type:"image"},
   {name:"AVALANCHE E-SPORT",desc:"Charte graphique",color:"#132744",mark:"AV",image:"chava2.png",type:"image"},
-  {name:"Mascotte AVA",desc:"3 illustrations",color:"#f1eee8",mark:"AVA",type:"folder",gallery:["AVA reboot.png","AVA.png","AVAss.png"]}
+  {name:"Mascotte AVA",desc:"3 illustrations",color:"#f1eee8",mark:"AVA",type:"folder",gallery:["AVA reboot.png","AVA.png","AVAss.png"]},
+  {name:"Bollyciné France",desc:"4 visuels",color:"#f1eee8",mark:"BF",type:"folder",gallery:["1.jpg","2.png","3.jpg","4.png"]}
  ]},
  radio:{title:"Mes formations",files:[
   {name:"Google Digital active",desc:"Dossier",type:"folder",logo:"GOOGLEDIGITALACTIVE.avif",border:"#4285f4",children:[],inert:true},
@@ -285,14 +286,15 @@ function renderFolder(title,items,crumb,origin){
  setWindowOrigin(finder,origin);
  finder.classList.remove('closing');finder.classList.add('open');
 }
-let activeGallery=null,galleryIndex=0;
+let activeGallery=null,activeGalleryName='Galerie',galleryIndex=0;
 function showGalleryImage(){
  const img=document.getElementById('project-image');
- img.src=activeGallery[galleryIndex];img.alt='Mascotte AVA — '+(galleryIndex+1)+' sur '+activeGallery.length;
- document.getElementById('image-window-title').textContent='Mascotte AVA · '+(galleryIndex+1)+' / '+activeGallery.length;
+ img.src=activeGallery[galleryIndex];const galleryName=activeGalleryName||'Galerie';
+ img.alt=galleryName+' — '+(galleryIndex+1)+' sur '+activeGallery.length;
+ document.getElementById('image-window-title').textContent=galleryName+' · '+(galleryIndex+1)+' / '+activeGallery.length;
 }
 function openGallery(name,images,origin){
- activeGallery=images;galleryIndex=0;
+ activeGallery=images;activeGalleryName=name;galleryIndex=0;
  imageWindow.classList.add('gallery-mode');
  showGalleryImage();
  setWindowOrigin(imageWindow,origin);
