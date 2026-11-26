@@ -119,10 +119,34 @@ button{font:inherit}
 .file.folder-file .folder-logo{display:block;width:62%;height:62%;object-fit:contain;background:transparent}
 .training-file .thumb{border-radius:12px;padding:10px}
 .training-file .folder-logo{width:76%;height:76%;object-fit:contain;background:transparent}
+
+/* Welcome notification */
+.welcome-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(12,17,34,.34);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);animation:welcomeFade .35s ease both}
+.welcome-card{position:relative;width:min(540px,100%);padding:34px 36px 30px;border:1px solid rgba(255,255,255,.75);border-radius:18px;background:rgba(250,250,253,.94);box-shadow:0 28px 90px rgba(5,10,25,.34),0 3px 12px rgba(5,10,25,.1);animation:welcomeIn .5s cubic-bezier(.2,.85,.25,1) both}
+.welcome-top{display:flex;align-items:center;gap:9px;margin-bottom:22px;color:#777f93;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.welcome-dot{width:9px;height:9px;border-radius:50%;background:#61bd83;box-shadow:0 0 0 4px rgba(97,189,131,.14)}
+.welcome-card h2{margin:0 0 15px;color:#202437;font-size:25px;line-height:1.18;letter-spacing:-.045em}
+.welcome-card p{margin:0;color:#535b70;font-size:14px;line-height:1.75}
+.welcome-card p strong{color:#252b40;font-weight:700}
+.welcome-action{display:flex;justify-content:flex-end;margin-top:25px}
+.welcome-action button{border:0;border-radius:9px;padding:12px 22px;background:#293f83;color:#fff;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 5px 14px rgba(41,63,131,.2);transition:transform .2s,background .2s}
+.welcome-action button:hover{background:#1f326e;transform:translateY(-1px)}
+.welcome-overlay.is-closing{animation:welcomeFadeOut .28s ease forwards}.welcome-overlay.is-closing .welcome-card{animation:welcomeOut .28s ease forwards}
+@keyframes welcomeFade{from{opacity:0}to{opacity:1}}@keyframes welcomeIn{from{opacity:0;transform:translateY(15px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes welcomeFadeOut{to{opacity:0;visibility:hidden}}@keyframes welcomeOut{to{opacity:0;transform:translateY(8px) scale(.98)}}
+@media(max-width:520px){.welcome-card{padding:28px 23px 23px;border-radius:15px}.welcome-card h2{font-size:22px}.welcome-card p{font-size:13px}}
 </style>
 </head>
 <body>
 <main class="desktop" id="desktop">
+ <div class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true" aria-labelledby="welcome-title" aria-describedby="welcome-message">
+  <div class="welcome-card">
+   <div class="welcome-top"><span class="welcome-dot"></span> VALENTIN GOLLION · PORTFOLIO</div>
+   <h2 id="welcome-title">Bienvenue sur mon ordinateur.</h2>
+   <p id="welcome-message">Vous vous apprêtez à visiter le portfolio de Valentin GOLLION, Chargé de communication · Graphiste · Concepteur, je vous embarque dans mon univers, et pour cela bienvenue sur mon ordinateur, car c’est le point 0, celui où tout commence ! Les plus beaux projets ont tous un point commun, ils ont commencé par une idée, celle de vouloir surprendre. Faites-moi confiance et découvrez pourquoi je suis le profil qu’il vous faut.</p>
+   <div class="welcome-action"><button type="button" id="welcome-close">Je découvre</button></div>
+  </div>
+ </div>
+
  <nav class="menu" aria-label="Menu principal">
   <img src="data:image/png;base64,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" alt="" style="width:22px;height:22px;object-fit:contain;filter:brightness(0) invert(1)"><span class="brand">VALENTIN GOLLION</span>
   <button data-open="about">À propos</button><button data-open="contact" class="hide-mobile">Contact</button>
@@ -190,6 +214,7 @@ button{font:inherit}
  <div class="toast" id="toast" role="status"></div>
 </main>
 <script>
+document.getElementById('welcome-close').addEventListener('click',()=>{const welcome=document.getElementById('welcome-overlay');welcome.classList.add('is-closing');welcome.addEventListener('animationend',()=>welcome.remove(),{once:true});});
 const projects={
  identite:{title:"Identités visuelles",files:[
   {name:"REBOOT FESTIVAL",desc:"Charte graphique",color:"#0b0e37",mark:"R",image:"Chava.png",type:"image"},
